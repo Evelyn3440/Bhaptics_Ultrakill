@@ -4,7 +4,6 @@ using Valve.VR;
 using UnityEngine;
 using MyBhapticsTactsuit;
 using HarmonyLib;
-using static UnityEngine.Random;
 
 namespace Bhaptics
 {
