@@ -12,7 +12,7 @@ namespace Bhaptics
     public static class PluginInfo
     {
         public const string
-            PLUGIN_GUID = "dev.evelyn344.bhatics", // do not change this string EVER
+            PLUGIN_GUID = "dev.evelyn344.bhaptics", // do not change this string EVER
             PLUGIN_NAME = "Bhaptics Support",
             PLUGIN_VERSION = "0.1"; // never use spaces
 

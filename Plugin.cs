@@ -45,7 +45,7 @@ namespace Bhaptics
             {
                 if (!explosion)
                 {
-                    tactsuitVr.PlaybackHaptics("BulletHit", damage / 100, 1f);
+                    tactsuitVr.PlaybackHaptics("BulletHit", damage / 100);
                 }
             }
         }
@@ -66,7 +66,6 @@ namespace Bhaptics
                     float distance = Vector3.Distance(other.transform.position, __instance.transform.position);
                     float intensity = Mathf.Min(Mathf.Max(1 - (distance / 18), 0.1f),0.75f);
                     tactsuitVr.PlaybackHaptics("ExplosionBelly", intensity);
-                    Log.LogMessage(intensity);
                 }
             }
         }
