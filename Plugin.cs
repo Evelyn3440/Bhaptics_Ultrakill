@@ -4,6 +4,8 @@ using Valve.VR;
 using UnityEngine;
 using MyBhapticsTactsuit;
 using HarmonyLib;
+using static UnityEngine.Random;
+
 namespace Bhaptics
 {
 
@@ -31,7 +33,7 @@ namespace Bhaptics
             harmony.PatchAll();
         }
         [HarmonyPatch(typeof(NewMovement), "GetHurt")]
-        public class BhapticsAdditions
+        public class BhapticsNonExplosion
         {
             [HarmonyPostfix]
             public static void Postfix(
@@ -42,13 +44,30 @@ namespace Bhaptics
                 bool explosion = false,
                 bool instablack = false)
             {
-                if (explosion)
+                if (!explosion)
                 {
-                    tactsuitVr.PlaybackHaptics("ExplosionBelly",damage/100,1.5f);
+                    tactsuitVr.PlaybackHaptics("BulletHit", damage / 100, 1f);
                 }
-                else
-                {
-                    tactsuitVr.PlaybackHaptics("BulletHit", damage / 10, 1f);
+            }
+        }
+        [HarmonyPatch(typeof(Explosion), "Collide")]
+        public class BhapticsExplosion
+        {
+            [HarmonyPrefix]
+            public static void Prefix(out int __state)
+            {
+                //This is bad. Really bad. but I'm gonna go with it!
+                __state = MonoSingleton<NewMovement>.Instance.hp;
+            }
+            [HarmonyPostfix]
+            public static void Postfix(int __state,Explosion __instance, Collider other)
+            {
+                if (MonoSingleton<NewMovement>.Instance.hp < __state){
+                    //mmm linear scaling
+                    float distance = Vector3.Distance(other.transform.position, __instance.transform.position);
+                    float intensity = Mathf.Min(Mathf.Max(1 - (distance / 18), 0.1f),0.75f);
+                    tactsuitVr.PlaybackHaptics("ExplosionBelly", intensity);
+                    Log.LogMessage(intensity);
                 }
             }
         }
