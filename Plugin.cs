@@ -1,6 +1,5 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
-using Valve.VR;
 using UnityEngine;
 using MyBhapticsTactsuit;
 using HarmonyLib;
