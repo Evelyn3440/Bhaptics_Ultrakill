@@ -35,7 +35,7 @@ namespace MyBhapticsTactsuit
                 // Check if reset event is active
                 HeartBeat_mrse.WaitOne();
                 PlaybackHaptics("HeartBeat");
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
         }
 
@@ -46,7 +46,7 @@ namespace MyBhapticsTactsuit
             try
             {
 #pragma warning disable CS0618 // remove warning that the C# library is deprecated
-                hapticPlayer = new HapticPlayer("H3VR_bhaptics", "H3VR_bhaptics");
+                hapticPlayer = new HapticPlayer("Ultrakill_bhaptics", "Ultrakill_bhaptics");
 #pragma warning restore CS0618
                 suitDisabled = false;
             }
@@ -124,13 +124,13 @@ namespace MyBhapticsTactsuit
             }
         }
 
-        public void PlayBackHit(String key, float xzAngle, float yShift)
+        public void PlayBackHit(String key, float xzAngle, float yShift,float intensity = 1.0f, float duration = 1.0f)
         {
             // two parameters can be given to the pattern to move it on the vest:
             // 1. An angle in degrees [0, 360] to turn the pattern to the left
             // 2. A shift [-0.5, 0.5] in y-direction (up and down) to move it up or down
             if (suitDisabled) { return; }
-            ScaleOption scaleOption = new ScaleOption(1f, 1f);
+            ScaleOption scaleOption = new ScaleOption(intensity, duration);
             RotationOption rotationOption = new RotationOption(xzAngle, yShift);
             hapticPlayer.SubmitRegisteredVestRotation(key, key, rotationOption, scaleOption);
         }

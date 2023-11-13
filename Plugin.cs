@@ -4,10 +4,14 @@ using UnityEngine;
 using MyBhapticsTactsuit;
 using HarmonyLib;
 using System.Collections.Generic;
+using Logic;
 
 namespace Bhaptics
 {
-
+    /**
+     * This code is designed to give someone a stroke
+     * GOOD LUCK.
+    **/
     // Dependencies are for compatibility with other mods.
     [BepInDependency("com.eternalUnion.pluginConfigurator", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("xzxADIxzx.Jaket", BepInDependency.DependencyFlags.SoftDependency)]
@@ -31,11 +35,11 @@ namespace Bhaptics
             var harmony = new Harmony("bhaptics.patch.ultrakill");
             harmony.PatchAll();
         }
-        private static void doHaptic(Vector3 Location)
+        private static void doHaptic(Vector3 Location, float intensity = 1.0f, float duration = 1.0f)
         {
             var angleShift = getAngleAndShift(Location);
             string feedbackKey = "BulletHit";
-            tactsuitVr.PlayBackHit(feedbackKey, angleShift.Key, angleShift.Value);
+            tactsuitVr.PlayBackHit(feedbackKey, angleShift.Key, angleShift.Value, intensity, duration);
         }
         //STOLEN CODE!
         private static KeyValuePair<float, float> getAngleAndShift(Vector3 hit)
@@ -187,7 +191,7 @@ namespace Bhaptics
                 }
             }
         }
-        [HarmonyPatch(typeof(ContinuousBeam),"Update")]
+        [HarmonyPatch(typeof(ContinuousBeam), "Update")]
         public class ContinuousBeamBhaptics
         {
             [HarmonyPrefix]
@@ -302,7 +306,7 @@ namespace Bhaptics
             }
         }
         [HarmonyPatch(typeof(MinosPrime), "DropAttackActivate")]
-        public class MinosPriminosPrimeptics
+        public class MinosPrimeBhaptics
         {
             [HarmonyPostfix]
             public static void Postfix(MinosPrime __instance)
@@ -324,7 +328,7 @@ namespace Bhaptics
             }
         }
         [HarmonyPatch(typeof(MinosPrime), "RiderKickActivate")]
-        public class MinosPrimeDropBhaptics
+        public class MinosPrimeKickBhaptics
         {
             [HarmonyPostfix]
             public static void Postfix(MinosPrime __instance)
@@ -341,6 +345,199 @@ namespace Bhaptics
                     {
                         doHaptic(raycastHit.point);
                     }
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(Nail), "OnCollisionEnter")]
+        public class NailBhaptics
+        {
+            [HarmonyPrefix]
+            public static void Prefix(out int __state)
+            {
+                //This is bad. Really bad. but I'm gonna go with it!
+                __state = MonoSingleton<NewMovement>.Instance.hp;
+            }
+            [HarmonyPostfix]
+            public static void Postfix(int __state, Nail __instance)
+            {
+                int damage = __state - MonoSingleton<NewMovement>.Instance.hp;
+                if (damage > 0)
+                {
+                    doHaptic(__instance.transform.position);
+                }
+            }
+        }
+        [HarmonyPatch(typeof(PhysicalShockwave), "CheckCollision")]
+        public class ShockWaveBhaptics
+        {
+            [HarmonyPrefix]
+            public static void Prefix(out int __state)
+            {
+                //This is bad. Really bad. but I'm gonna go with it!
+                __state = MonoSingleton<NewMovement>.Instance.hp;
+            }
+            [HarmonyPostfix]
+            public static void Postfix(int __state)
+            {
+                int damage = __state - MonoSingleton<NewMovement>.Instance.hp;
+                if (damage > 0)
+                {
+                    tactsuitVr.PlaybackHaptics("ExplosionBelly", 0.25f);
+                }
+            }
+        }
+        [HarmonyPatch(typeof(RevolverBeam), "ExecuteHits")]
+        public class RevolverBeamBhaptics
+        {
+            [HarmonyPrefix]
+            public static void Prefix(out int __state)
+            {
+                //This is bad. Really bad. but I'm gonna go with it!
+                __state = MonoSingleton<NewMovement>.Instance.hp;
+            }
+            [HarmonyPostfix]
+            public static void Postfix(int __state, RaycastHit currentHit)
+            {
+                int damage = __state - MonoSingleton<NewMovement>.Instance.hp;
+                if (damage > 0)
+                {
+                    doHaptic(currentHit.point);
+                }
+            }
+        }
+        [HarmonyPatch(typeof(SisyphusPrime), "DropAttackActivate")]
+        public class SisyphusPrimeBhaptics
+        {
+            [HarmonyPostfix]
+            public static void Postfix(SisyphusPrime __instance)
+            {
+                RaycastHit hitInfo;
+                Physics.Raycast(__instance.aimingBone.position, Vector3.down, out hitInfo, 250f, (int)LayerMaskDefaults.Get(LMD.Environment));
+                LineRenderer component1 = Object.Instantiate<GameObject>(__instance.attackTrail, __instance.aimingBone.position, __instance.transform.rotation).GetComponent<LineRenderer>();
+                component1.SetPosition(0, __instance.aimingBone.position);
+                RaycastHit[] raycastHitArray = Physics.SphereCastAll(__instance.aimingBone.position, 5f, Vector3.down, Vector3.Distance(__instance.aimingBone.position, hitInfo.point), (int)LayerMaskDefaults.Get(LMD.EnemiesAndPlayer));
+                foreach (RaycastHit raycastHit in raycastHitArray)
+                {
+                    if (raycastHit.collider.gameObject.tag == "Player")
+                    {
+                        doHaptic(raycastHit.point);
+                    }
+                }
+            }
+        }
+        [HarmonyPatch(typeof(SisyphusPrime), "RiderKickActivate")]
+        public class SisyphusPrimeKickBhaptics
+        {
+            [HarmonyPostfix]
+            public static void Postfix(SisyphusPrime __instance)
+            {
+                RaycastHit hitInfo;
+                Physics.Raycast(__instance.aimingBone.position, __instance.transform.forward, out hitInfo, 250f, (int)LayerMaskDefaults.Get(LMD.Environment));
+                LineRenderer component1 = Object.Instantiate<GameObject>(__instance.attackTrail, __instance.aimingBone.position, __instance.transform.rotation).GetComponent<LineRenderer>();
+                component1.SetPosition(0, __instance.aimingBone.position);
+                RaycastHit[] raycastHitArray = Physics.SphereCastAll(__instance.aimingBone.position, 5f, __instance.transform.forward, Vector3.Distance(__instance.aimingBone.position, hitInfo.point), (int)LayerMaskDefaults.Get(LMD.EnemiesAndPlayer));
+                foreach (RaycastHit raycastHit in raycastHitArray)
+                {
+                    if (raycastHit.collider.gameObject.tag == "Player")
+                    {
+                        doHaptic(raycastHit.point);
+                    }
+                }
+            }
+        }
+        [HarmonyPatch(typeof(SwingCheck2), "CheckCollision")]
+        public class SwingCheck2Bhaptics
+        {
+            [HarmonyPrefix]
+            public static void Prefix(out int __state)
+            {
+                //This is bad. Really bad. but I'm gonna go with it!
+                __state = MonoSingleton<NewMovement>.Instance.hp;
+            }
+            [HarmonyPostfix]
+            public static void Postfix(int __state, SwingCheck2 __instance)
+            {
+                int damage = __state - MonoSingleton<NewMovement>.Instance.hp;
+                if (damage > 0)
+                {
+                    doHaptic(__instance.transform.position);
+                }
+            }
+        }
+        [HarmonyPatch(typeof(ThrownSword), "OnTriggerEnter")]
+        public class ThrownSwordBhaptics
+        {
+            [HarmonyPrefix]
+            public static void Prefix(out int __state)
+            {
+                //This is bad. Really bad. but I'm gonna go with it!
+                __state = MonoSingleton<NewMovement>.Instance.hp;
+            }
+            [HarmonyPostfix]
+            public static void Postfix(int __state, ThrownSword __instance)
+            {
+                int damage = __state - MonoSingleton<NewMovement>.Instance.hp;
+                if (damage > 0)
+                {
+                    doHaptic(__instance.transform.position);
+                }
+            }
+        }
+        [HarmonyPatch(typeof(VirtueInsignia), "OnTriggerEnter")]
+        public class VirtueInsigniaBhaptics
+        {
+            [HarmonyPrefix]
+            public static void Prefix(out int __state)
+            {
+                //This is bad. Really bad. but I'm gonna go with it!
+                __state = MonoSingleton<NewMovement>.Instance.hp;
+            }
+            [HarmonyPostfix]
+            public static void Postfix(int __state, VirtueInsignia __instance)
+            {
+                int damage = __state - MonoSingleton<NewMovement>.Instance.hp;
+                if (damage > 0)
+                {
+                    doHaptic(__instance.transform.position);
+                }
+            }
+        }
+        [HarmonyPatch(typeof(Wicked), "OnCollisionEnter")]
+        public class WickedBhaptics
+        {
+            [HarmonyPrefix]
+            public static void Prefix(out int __state)
+            {
+                //This is bad. Really bad. but I'm gonna go with it!
+                __state = MonoSingleton<NewMovement>.Instance.hp;
+            }
+            [HarmonyPostfix]
+            public static void Postfix(int __state, Wicked __instance)
+            {
+                int damage = __state - MonoSingleton<NewMovement>.Instance.hp;
+                if (damage > 0)
+                {
+                    tactsuitVr.PlaybackHaptics("ExplosionBelly", 1f);
+                }
+            }
+        }
+        [HarmonyPatch(typeof(SceneHelper), "LoadScene")]
+        public class HeartBeatWicked
+        {
+            [HarmonyPostfix]
+            public static void Postfix(string sceneName)
+            {
+                Log.LogMessage("MEOW");
+                Log.LogMessage(sceneName);
+                if (sceneName == "Level 0-S"){
+                    Log.LogMessage("test");
+                    tactsuitVr.StartHeartBeat();
+                }
+                else
+                {
+                    Log.LogMessage("shit");
+                    tactsuitVr.StopHeartBeat();
                 }
             }
         }
