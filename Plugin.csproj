@@ -7,7 +7,7 @@
     <ProjectGuid>{3FBB1FC9-B424-404C-B0C5-1A8AFFF14F5B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Plugin</RootNamespace>
+    <RootNamespace>Bhaptics</RootNamespace>
     <AssemblyName>BHaptics</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\SteamLibrary\steamapps\common\ULTRAKILL\BepInEx\plugins\</OutputPath>
+    <OutputPath>bin\builds\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>

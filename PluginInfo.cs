@@ -17,12 +17,12 @@ namespace Bhaptics
             PLUGIN_VERSION = "0.1"; // never use spaces
 
         public static readonly string
-            PluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), // ".../BepInEx/plugins/VRTRAKILL"
+            PluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), // ".../BepInEx/plugins/Bhaptics"
             FullGamePath = Process.GetCurrentProcess().MainModule.FileName, // ".../ULTRAKILL/ULTRAKILL.exe"
             GamePath = Path.GetDirectoryName(FullGamePath); // ".../ULTRAKILL"
 
         public const string
-            GithubRepoLink = "tbd",
-            FriendlyGithubRepoLink = "tbd";
+            GithubRepoLink = "https://api.github.com/repos/blong344/Bhaptics_Ultrakill",
+            FriendlyGithubRepoLink = "https://github.com/blong344/Bhaptics_Ultrakill";
     }
 }

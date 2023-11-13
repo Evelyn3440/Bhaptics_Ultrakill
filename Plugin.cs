@@ -27,7 +27,7 @@ namespace Bhaptics
             // Make my own logger so it can be accessed from the Tactsuit class
             Log = base.Logger;
             // Plugin startup logic
-            Logger.LogMessage("Plugin H3VR_bhaptics is loaded!");
+            Logger.LogMessage("Plugin Ultrakill_bhaptics is loaded!");
             tactsuitVr = new TactsuitVR();
             // one startup heartbeat so you know the vest works correctly
             tactsuitVr.PlaybackHaptics("HeartBeat");
@@ -528,15 +528,12 @@ namespace Bhaptics
             [HarmonyPostfix]
             public static void Postfix(string sceneName)
             {
-                Log.LogMessage("MEOW");
                 Log.LogMessage(sceneName);
                 if (sceneName == "Level 0-S"){
-                    Log.LogMessage("test");
                     tactsuitVr.StartHeartBeat();
                 }
                 else
                 {
-                    Log.LogMessage("shit");
                     tactsuitVr.StopHeartBeat();
                 }
             }
