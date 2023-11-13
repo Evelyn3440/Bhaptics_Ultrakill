@@ -7,6 +7,7 @@ This mod was also heavily inspired by [VRTRAKILL](https://github.com/whateveruse
 ### Features:
 - Directional Haptic Feedback from all but explosions!
 - For explosions it is not direction but is scaled by distance!
+- A constant 120 bpm heartbeat in 0-S
 
 ## Installation:
 Follow this [Guide](https://github.com/blong344/Bhaptics_Ultrakill/wiki/Installation)
