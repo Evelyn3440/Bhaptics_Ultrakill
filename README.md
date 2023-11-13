@@ -4,4 +4,9 @@ Most of this code is taken from the repository [H3VR_bhaptics](https://github.co
 
 This mod was also heavily inspired by [VRTRAKILL](https://github.com/whateverusername0/VRTRAKILL)
 
-Currently missing implementation of direction and distance. This will be fixed
+### Features:
+- Directional Haptic Feedback from all but explosions!
+- For explosions it is not direction but is scaled by distance!
+
+## Installation:
+Follow this [Guide](https://github.com/blong344/Bhaptics_Ultrakill/wiki/Installation)
