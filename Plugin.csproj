@@ -88,16 +88,6 @@
       <HintPath>Libraries\ModSupport\PluginConfigurator.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SteamVR, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Plugin\Libraries\SteamVR\SteamVR.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SteamVR_Actions, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libraries\SteamVR\SteamVR_Actions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />

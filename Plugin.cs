@@ -35,11 +35,10 @@ namespace Bhaptics
             var harmony = new Harmony("bhaptics.patch.ultrakill");
             harmony.PatchAll();
         }
-        private static void doHaptic(Vector3 Location, float intensity = 1.0f, float duration = 1.0f)
+        private static void doHaptic(Vector3 Location, string type = "BulletHit", float intensity = 1.0f, float duration = 1.0f)
         {
             var angleShift = getAngleAndShift(Location);
-            string feedbackKey = "BulletHit";
-            tactsuitVr.PlayBackHit(feedbackKey, angleShift.Key, angleShift.Value, intensity, duration);
+            tactsuitVr.PlayBackHit(type, angleShift.Key, angleShift.Value, intensity, duration);
         }
         //STOLEN CODE!
         private static KeyValuePair<float, float> getAngleAndShift(Vector3 hit)
@@ -535,6 +534,18 @@ namespace Bhaptics
                 else
                 {
                     tactsuitVr.StopHeartBeat();
+                }
+            }
+        }
+        [HarmonyPatch(typeof(GroundCheck), "OnTriggerEnter")]
+        public class GroundCheckHaptics
+        {
+            [HarmonyPrefix]
+            public static void Prefix(GroundCheck __instance)
+            {
+                if (__instance.nmov.fallSpeed <= -92)
+                {
+                    tactsuitVr.PlaybackHaptics("Impact", 0.6f);
                 }
             }
         }
