@@ -50,7 +50,7 @@ namespace MyBhapticsTactsuit
 #pragma warning restore CS0618
                 suitDisabled = false;
             }
-            catch { LOG("Suit initialization failed!"); }
+            catch { LOG("Suit initialization failed! Check if suit is connected!"); }
             RegisterAllTactFiles();
             LOG("Starting HeartBeat thread...");
             Thread HeartBeatThread = new Thread(HeartBeatFunc);
